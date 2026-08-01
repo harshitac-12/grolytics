@@ -1,6 +1,6 @@
 # Grolytics
 
-> Turn Grocery Bills into Smart Insights.
+> "A platform that organizes all your grocery history into meaningful analytics."
 
 Grolytics is an grocery analytics platform that transforms grocery invoices into meaningful insights. Users can upload grocery bills, automatically extract purchased items using AI, and visualize spending patterns, purchase history, and consumption trends.
 
