@@ -7,11 +7,14 @@ function Button({
 }) {
   const variants = {
     primary:
-      "bg-blue-600 text-white hover:bg-blue-700",
+      "bg-[#0F766E] text-white hover:bg-[#115E59]",
+
     secondary:
-      "bg-slate-100 text-slate-700 hover:bg-slate-200",
+      "bg-[#CCFBF1] text-[#0F766E] hover:bg-[#99F6E4]",
+
     outline:
-      "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+      "border border-[#DCE7E7] bg-white text-[#102A43] hover:bg-[#F0FAFA]",
+
     danger:
       "bg-red-500 text-white hover:bg-red-600",
   };

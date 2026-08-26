@@ -52,7 +52,7 @@ function Sidebar() {
   ];
 
   return (
-    <aside className="hidden min-h-screen w-64 shrink-0 flex-col bg-[#0B1F3A] text-white md:flex">
+    <aside className="hidden min-h-screen w-64 shrink-0 flex-col bg-[#102A43] text-white md:flex">
 
       {/* Logo */}
       <div className="flex h-20 items-center border-b border-white/10 px-6">
@@ -69,6 +69,7 @@ function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6">
+
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Menu
         </p>
@@ -84,7 +85,7 @@ function Sidebar() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
                     isActive
-                      ? "bg-blue-600 text-white shadow-sm"
+                      ? "bg-[#0F766E] text-white shadow-sm"
                       : "text-slate-300 hover:bg-white/10 hover:text-white"
                   }`
                 }
@@ -96,9 +97,10 @@ function Sidebar() {
             );
           })}
         </div>
+
       </nav>
 
-      {/* Bottom section */}
+      {/* Bottom Section */}
       <div className="border-t border-white/10 p-3">
 
         <NavLink
@@ -106,7 +108,7 @@ function Sidebar() {
           className={({ isActive }) =>
             `mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
               isActive
-                ? "bg-blue-600 text-white"
+                ? "bg-[#0F766E] text-white"
                 : "text-slate-300 hover:bg-white/10 hover:text-white"
             }`
           }
@@ -121,6 +123,7 @@ function Sidebar() {
         </button>
 
       </div>
+
     </aside>
   );
 }

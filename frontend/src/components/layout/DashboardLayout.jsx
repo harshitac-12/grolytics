@@ -3,7 +3,7 @@ import Navbar from "../navbar/Navbar";
 
 function DashboardLayout({ children }) {
   return (
-    <div className="flex min-h-screen bg-[#F0F9FA]">
+    <div className="flex min-h-screen bg-[#F0FAFA]">
 
       {/* Sidebar */}
       <Sidebar />
@@ -20,6 +20,7 @@ function DashboardLayout({ children }) {
         </main>
 
       </div>
+
     </div>
   );
 }

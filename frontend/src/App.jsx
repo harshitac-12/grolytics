@@ -6,17 +6,25 @@ import {
 } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
-
+import UploadBills from "./pages/UploadBills/UploadBills";
+import Inventory from "./pages/Inventory";
+import PurchaseHistory from "./pages/PurchaseHistory";
+import Analytics from "./pages/Analytics";
+import Reports from "./pages/Reports";
+import Alerts from "./pages/Alerts";
+import Settings from "./pages/Settings";
 function Placeholder({ title }) {
   return (
-    <div className="rounded-2xl bg-white p-8 shadow-sm">
-      <h1 className="text-2xl font-bold text-slate-900">
+    <div className="rounded-2xl border border-[#DCE7E7] bg-white p-8 shadow-sm">
+
+      <h1 className="text-2xl font-bold text-[#102A43]">
         {title}
       </h1>
 
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 text-sm text-[#64748B]">
         This page will be built soon.
       </p>
+
     </div>
   );
 }
@@ -24,63 +32,60 @@ function Placeholder({ title }) {
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
 
-        {/* Default */}
         <Route
           path="/"
           element={<Navigate to="/dashboard" replace />}
         />
 
-        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={<Dashboard />}
         />
 
-        {/* Grolytics Pages */}
         <Route
           path="/upload-bills"
-          element={<Placeholder title="Upload Bills" />}
+          element={<UploadBills />}
         />
 
+       <Route
+  path="/inventory"
+  element={<Inventory />}
+/>
+
+     
+<Route
+  path="/purchase-history"
+  element={<PurchaseHistory />}
+/>
+   <Route
+  path="/analytics"
+  element={<Analytics />}
+/>
         <Route
-          path="/inventory"
-          element={<Placeholder title="Inventory" />}
-        />
+  path="/reports"
+  element={<Reports />}
+/>
 
-        <Route
-          path="/purchase-history"
-          element={<Placeholder title="Purchase History" />}
-        />
+   <Route
+  path="/alerts"
+  element={<Alerts />}
+/>
 
-        <Route
-          path="/analytics"
-          element={<Placeholder title="Analytics" />}
-        />
+       <Route
+  path="/settings"
+  element={<Settings />}
+/> 
 
-        <Route
-          path="/reports"
-          element={<Placeholder title="Reports" />}
-        />
-
-        <Route
-          path="/alerts"
-          element={<Placeholder title="Alerts" />}
-        />
-
-        <Route
-          path="/settings"
-          element={<Placeholder title="Settings" />}
-        />
-
-        {/* Unknown URL */}
         <Route
           path="*"
           element={<Navigate to="/dashboard" replace />}
         />
 
       </Routes>
+
     </BrowserRouter>
   );
 }
