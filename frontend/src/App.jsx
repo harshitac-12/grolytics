@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-
+import Circles from "./pages/Circles/Circles";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import UploadBills from "./pages/UploadBills/UploadBills";
 import Inventory from "./pages/Inventory";
@@ -49,7 +49,10 @@ function App() {
           path="/upload-bills"
           element={<UploadBills />}
         />
-
+<Route
+  path="/circles"
+  element={<Circles />}
+/>
        <Route
   path="/inventory"
   element={<Inventory />}

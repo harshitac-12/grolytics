@@ -1,447 +1,771 @@
 import {
-  ShoppingCart,
   IndianRupee,
-  Package,
+  ReceiptText,
+  ShoppingBag,
   TrendingUp,
-  Upload,
   ArrowUpRight,
+  ArrowDownRight,
+  Package,
+  CalendarDays,
+  Activity,
 } from "lucide-react";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import Card from "../../components/ui/Card";
-import StatCard from "../../components/ui/StatCard";
-import Badge from "../../components/ui/Badge";
 
 function Dashboard() {
+  // -----------------------------
+  // Dashboard data
+  // -----------------------------
+
+  const [dashboardData, setDashboardData] = useState({
+    totalBills: 0,
+    monthlySpend: 0,
+    topProduct: "Loading...",
+    averageSpend: 0,
+  });
+
+  const [backendStatus, setBackendStatus] =
+    useState("Checking backend...");
+
+  const [loading, setLoading] = useState(true);
+
+  // -----------------------------
+  // Get data from backend
+  // -----------------------------
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        // Check backend
+        const healthResponse = await axios.get(
+          "http://localhost:5000/api/health"
+        );
+
+        setBackendStatus(
+          healthResponse.data.message
+        );
+
+        // Get dashboard data
+        const dashboardResponse = await axios.get(
+          "http://localhost:5000/api/dashboard"
+        );
+
+        setDashboardData(
+          dashboardResponse.data
+        );
+      } catch (error) {
+        console.error(
+          "Dashboard API error:",
+          error
+        );
+
+        setBackendStatus(
+          "Backend unavailable"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  // -----------------------------
+  // Chart mock data
+  // -----------------------------
+
+  const monthlyData = [
+    {
+      month: "Mar",
+      amount: 3980,
+    },
+    {
+      month: "Apr",
+      amount: 4250,
+    },
+    {
+      month: "May",
+      amount: 4520,
+    },
+    {
+      month: "Jun",
+      amount: 4380,
+    },
+    {
+      month: "Jul",
+      amount: 4860,
+    },
+    {
+      month: "Aug",
+      amount: 5120,
+    },
+  ];
+
+  const categoryData = [
+    {
+      category: "Dairy",
+      amount: 1555,
+      percentage: 30,
+    },
+    {
+      category: "Staples",
+      amount: 875,
+      percentage: 17,
+    },
+    {
+      category: "Vegetables",
+      amount: 1118,
+      percentage: 22,
+    },
+    {
+      category: "Snacks",
+      amount: 729,
+      percentage: 14,
+    },
+    {
+      category: "Fruits",
+      amount: 543,
+      percentage: 11,
+    },
+  ];
+
   const recentPurchases = [
     {
-      id: 1,
       product: "Milk",
-      category: "Dairy",
       store: "Blinkit",
       date: "25 Aug 2026",
-      amount: "₹60",
+      amount: 120,
     },
     {
-      id: 2,
       product: "Basmati Rice",
-      category: "Staples",
       store: "Zepto",
       date: "23 Aug 2026",
-      amount: "₹250",
+      amount: 250,
     },
     {
-      id: 3,
       product: "Bread",
-      category: "Bakery",
       store: "Instamart",
       date: "21 Aug 2026",
-      amount: "₹80",
+      amount: 40,
     },
     {
-      id: 4,
       product: "Cooking Oil",
-      category: "Staples",
       store: "BigBasket",
       date: "19 Aug 2026",
-      amount: "₹180",
+      amount: 180,
     },
     {
-      id: 5,
       product: "Eggs",
-      category: "Dairy",
       store: "Blinkit",
       date: "18 Aug 2026",
-      amount: "₹72",
+      amount: 96,
     },
   ];
 
-  const topProducts = [
-    { name: "Milk", purchases: 18 },
-    { name: "Bread", purchases: 14 },
-    { name: "Eggs", purchases: 12 },
-    { name: "Banana", purchases: 10 },
-    { name: "Rice", purchases: 8 },
-  ];
+  // -----------------------------
+  // Find highest monthly spending
+  // -----------------------------
 
-  const monthlySpending = [
-    { month: "Mar", amount: 3200, height: 55 },
-    { month: "Apr", amount: 4100, height: 68 },
-    { month: "May", amount: 3600, height: 60 },
-    { month: "Jun", amount: 4700, height: 78 },
-    { month: "Jul", amount: 4200, height: 70 },
-    { month: "Aug", amount: 4860, height: 85 },
-  ];
+  const highestMonth = monthlyData.reduce(
+    (highest, current) =>
+      current.amount > highest.amount
+        ? current
+        : highest
+  );
+
+  // -----------------------------
+  // UI
+  // -----------------------------
 
   return (
     <DashboardLayout>
 
-      {/* Header */}
-      <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+      {/* ================================= */}
+      {/* HEADER */}
+      {/* ================================= */}
 
-        <div>
-          <p className="mb-1 text-sm font-medium text-[#0F766E]">
-            Wednesday, 26 August 2026
-          </p>
+      <div className="mb-8">
 
-          <h1 className="text-2xl font-bold text-[#102A43] md:text-3xl">
-            Good Morning, Harshita 👋
-          </h1>
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
 
-          <p className="mt-1 text-sm text-[#64748B]">
-            Here's an overview of your grocery activity.
-          </p>
+          <div>
+
+            <h1 className="text-2xl font-bold text-[#102A43] md:text-3xl">
+              Dashboard
+            </h1>
+
+            <p className="mt-1 text-sm text-[#64748B]">
+              Here's an overview of your grocery activity.
+            </p>
+
+          </div>
+
+          {/* Backend status */}
+
+          <div className="flex items-center gap-3 rounded-xl border border-[#DCE7E7] bg-white px-4 py-3">
+
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                backendStatus ===
+                "Backend unavailable"
+                  ? "bg-red-500"
+                  : backendStatus ===
+                    "Checking backend..."
+                  ? "bg-yellow-400"
+                  : "bg-emerald-500"
+              }`}
+            />
+
+            <div>
+
+              <p className="text-xs font-semibold text-[#102A43]">
+                Backend
+              </p>
+
+              <p className="text-xs text-[#64748B]">
+                {backendStatus}
+              </p>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <button className="flex w-fit items-center gap-2 rounded-xl bg-[#0F766E] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#115E59]">
-          <Upload size={18} />
-          Upload Bill
-        </button>
-
       </div>
 
-      {/* Statistics */}
+      {/* ================================= */}
+      {/* SUMMARY CARDS */}
+      {/* ================================= */}
+
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-        <StatCard
-          title="Total Purchases"
-          value="128"
-          subtitle="This year"
-          icon={<ShoppingCart size={20} />}
-        />
+        {/* Total Bills */}
 
-        <StatCard
-          title="Monthly Spend"
-          value="₹4,860"
-          subtitle="August 2026"
-          icon={<IndianRupee size={20} />}
-        />
+        <Card>
 
-        <StatCard
-          title="Unique Products"
-          value="47"
-          subtitle="Across all purchases"
-          icon={<Package size={20} />}
-        />
+          <div className="flex items-start justify-between">
 
-        <StatCard
-          title="Average Spend"
-          value="₹742"
-          subtitle="Per purchase"
-          icon={<TrendingUp size={20} />}
-        />
+            <div>
+
+              <p className="text-sm text-[#64748B]">
+                Total Bills
+              </p>
+
+              <p className="mt-2 text-2xl font-bold text-[#102A43]">
+
+                {loading
+                  ? "..."
+                  : dashboardData.totalBills}
+
+              </p>
+
+              <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
+
+                <ArrowUpRight size={14} />
+
+                <span>
+                  Recorded purchases
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#CCFBF1] text-[#0F766E]">
+
+              <ReceiptText size={21} />
+
+            </div>
+
+          </div>
+
+        </Card>
+
+        {/* Monthly Spend */}
+
+        <Card>
+
+          <div className="flex items-start justify-between">
+
+            <div>
+
+              <p className="text-sm text-[#64748B]">
+                Monthly Spend
+              </p>
+
+              <p className="mt-2 text-2xl font-bold text-[#102A43]">
+
+                ₹
+                {loading
+                  ? "..."
+                  : dashboardData.monthlySpend.toLocaleString(
+                      "en-IN"
+                    )}
+
+              </p>
+
+              <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
+
+                <ArrowUpRight size={14} />
+
+                <span>
+                  Current month
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E6F6F4] text-[#0F766E]">
+
+              <IndianRupee size={21} />
+
+            </div>
+
+          </div>
+
+        </Card>
+
+        {/* Top Product */}
+
+        <Card>
+
+          <div className="flex items-start justify-between">
+
+            <div className="min-w-0">
+
+              <p className="text-sm text-[#64748B]">
+                Top Product
+              </p>
+
+              <p className="mt-2 truncate text-2xl font-bold text-[#102A43]">
+
+                {loading
+                  ? "..."
+                  : dashboardData.topProduct}
+
+              </p>
+
+              <div className="mt-2 flex items-center gap-1 text-xs text-[#64748B]">
+
+                <Package size={14} />
+
+                <span>
+                  Most purchased
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFF4D6] text-[#B77900]">
+
+              <ShoppingBag size={21} />
+
+            </div>
+
+          </div>
+
+        </Card>
+
+        {/* Average Spend */}
+
+        <Card>
+
+          <div className="flex items-start justify-between">
+
+            <div>
+
+              <p className="text-sm text-[#64748B]">
+                Average Spend
+              </p>
+
+              <p className="mt-2 text-2xl font-bold text-[#102A43]">
+
+                ₹
+                {loading
+                  ? "..."
+                  : dashboardData.averageSpend.toLocaleString(
+                      "en-IN"
+                    )}
+
+              </p>
+
+              <div className="mt-2 flex items-center gap-1 text-xs text-[#64748B]">
+
+                <Activity size={14} />
+
+                <span>
+                  Per purchase
+                </span>
+
+              </div>
+
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#EEF2FF] text-[#6366F1]">
+
+              <TrendingUp size={21} />
+
+            </div>
+
+          </div>
+
+        </Card>
 
       </div>
 
-      {/* Charts */}
+      {/* ================================= */}
+      {/* CHART + CATEGORY */}
+      {/* ================================= */}
+
       <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
 
         {/* Monthly Spending */}
+
         <Card className="xl:col-span-2">
 
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex items-start justify-between">
 
             <div>
+
               <h2 className="text-lg font-semibold text-[#102A43]">
                 Monthly Spending
               </h2>
 
-              <p className="mt-1 text-xs text-[#64748B]">
-                Grocery spending over the last six months
+              <p className="mt-1 text-sm text-[#64748B]">
+                Your grocery spending over the last 6 months.
               </p>
+
             </div>
 
-            <select className="rounded-lg border border-[#DCE7E7] bg-white px-3 py-2 text-xs text-[#64748B] outline-none focus:border-[#0F766E]">
-              <option>6 Months</option>
-              <option>This Year</option>
-            </select>
+            <div className="flex items-center gap-1 rounded-lg bg-[#F0FAFA] px-3 py-1.5 text-xs font-medium text-[#0F766E]">
+
+              <TrendingUp size={14} />
+
+              6 Months
+
+            </div>
 
           </div>
 
-          <div className="flex h-64 items-end gap-3 sm:gap-6">
+          {/* Simple bar chart */}
 
-            {monthlySpending.map((item) => (
-              <div
-                key={item.month}
-                className="flex h-full flex-1 flex-col items-center justify-end gap-2"
-              >
+          <div className="flex h-[280px] items-end gap-3 sm:gap-5">
 
-                <div className="group relative flex h-52 w-full items-end">
+            {monthlyData.map((item) => {
 
-                  <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 rounded-lg bg-[#102A43] px-2 py-1 text-xs text-white group-hover:block">
-                    ₹{item.amount.toLocaleString("en-IN")}
+              const height =
+                (item.amount /
+                  highestMonth.amount) *
+                100;
+
+              return (
+
+                <div
+                  key={item.month}
+                  className="flex h-full flex-1 flex-col items-center justify-end"
+                >
+
+                  <div className="mb-2 text-xs font-medium text-[#64748B]">
+
+                    ₹
+                    {(
+                      item.amount / 1000
+                    ).toFixed(1)}
+                    k
+
                   </div>
 
                   <div
-                    className="w-full rounded-t-lg bg-[#0F766E] transition hover:bg-[#115E59]"
+                    className="w-full max-w-[55px] rounded-t-xl bg-[#0F766E] transition hover:bg-[#115E59]"
                     style={{
-                      height: `${item.height}%`,
+                      height: `${height}%`,
+                    }}
+                    title={`₹${item.amount.toLocaleString(
+                      "en-IN"
+                    )}`}
+                  />
+
+                  <p className="mt-3 text-xs font-medium text-[#64748B]">
+                    {item.month}
+                  </p>
+
+                </div>
+
+              );
+            })}
+
+          </div>
+
+        </Card>
+
+        {/* Category Spending */}
+
+        <Card>
+
+          <div className="mb-6">
+
+            <h2 className="text-lg font-semibold text-[#102A43]">
+              Spending by Category
+            </h2>
+
+            <p className="mt-1 text-sm text-[#64748B]">
+              Distribution of this month's spending.
+            </p>
+
+          </div>
+
+          <div className="space-y-5">
+
+            {categoryData.map((item) => (
+
+              <div key={item.category}>
+
+                <div className="mb-2 flex items-center justify-between">
+
+                  <span className="text-sm font-medium text-[#102A43]">
+                    {item.category}
+                  </span>
+
+                  <span className="text-sm text-[#64748B]">
+                    ₹
+                    {item.amount.toLocaleString(
+                      "en-IN"
+                    )}
+                  </span>
+
+                </div>
+
+                <div className="h-2 overflow-hidden rounded-full bg-[#E6F1F1]">
+
+                  <div
+                    className="h-full rounded-full bg-[#0F766E]"
+                    style={{
+                      width: `${item.percentage}%`,
                     }}
                   />
 
                 </div>
 
-                <span className="text-xs text-[#64748B]">
-                  {item.month}
-                </span>
-
               </div>
+
             ))}
 
           </div>
 
         </Card>
 
-        {/* Spending Summary */}
-        <Card>
-
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-[#102A43]">
-              Spending Summary
-            </h2>
-
-            <p className="mt-1 text-xs text-[#64748B]">
-              August 2026
-            </p>
-          </div>
-
-          <div className="space-y-5">
-
-            {/* Dairy */}
-            <div>
-              <div className="mb-2 flex justify-between">
-                <span className="text-sm text-[#64748B]">
-                  Dairy
-                </span>
-
-                <span className="text-sm font-medium text-[#102A43]">
-                  ₹1,555
-                </span>
-              </div>
-
-              <div className="h-2 rounded-full bg-[#E6F0F0]">
-                <div className="h-2 w-[72%] rounded-full bg-[#0F766E]" />
-              </div>
-            </div>
-
-            {/* Staples */}
-            <div>
-              <div className="mb-2 flex justify-between">
-                <span className="text-sm text-[#64748B]">
-                  Staples
-                </span>
-
-                <span className="text-sm font-medium text-[#102A43]">
-                  ₹875
-                </span>
-              </div>
-
-              <div className="h-2 rounded-full bg-[#E6F0F0]">
-                <div className="h-2 w-[45%] rounded-full bg-[#2A9D8F]" />
-              </div>
-            </div>
-
-            {/* Vegetables */}
-            <div>
-              <div className="mb-2 flex justify-between">
-                <span className="text-sm text-[#64748B]">
-                  Vegetables
-                </span>
-
-                <span className="text-sm font-medium text-[#102A43]">
-                  ₹1,118
-                </span>
-              </div>
-
-              <div className="h-2 rounded-full bg-[#E6F0F0]">
-                <div className="h-2 w-[58%] rounded-full bg-[#F4B942]" />
-              </div>
-            </div>
-
-            {/* Snacks */}
-            <div>
-              <div className="mb-2 flex justify-between">
-                <span className="text-sm text-[#64748B]">
-                  Snacks
-                </span>
-
-                <span className="text-sm font-medium text-[#102A43]">
-                  ₹729
-                </span>
-              </div>
-
-              <div className="h-2 rounded-full bg-[#E6F0F0]">
-                <div className="h-2 w-[35%] rounded-full bg-[#8B5CF6]" />
-              </div>
-            </div>
-
-          </div>
-
-          <div className="mt-6 border-t border-[#DCE7E7] pt-4">
-
-            <div className="flex items-center justify-between">
-
-              <span className="text-sm text-[#64748B]">
-                Total spending
-              </span>
-
-              <span className="text-lg font-bold text-[#102A43]">
-                ₹4,860
-              </span>
-
-            </div>
-
-          </div>
-
-        </Card>
-
       </div>
 
-      {/* Bottom Section */}
+      {/* ================================= */}
+      {/* RECENT PURCHASES + ACTIVITY */}
+      {/* ================================= */}
+
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
         {/* Recent Purchases */}
+
         <Card className="xl:col-span-2">
 
-          <div className="mb-5 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between">
 
             <div>
+
               <h2 className="text-lg font-semibold text-[#102A43]">
                 Recent Purchases
               </h2>
 
-              <p className="mt-1 text-xs text-[#64748B]">
-                Your latest grocery purchases
+              <p className="mt-1 text-sm text-[#64748B]">
+                Your latest grocery purchases.
               </p>
+
             </div>
 
             <button className="flex items-center gap-1 text-sm font-medium text-[#0F766E] hover:text-[#115E59]">
+
               View all
+
               <ArrowUpRight size={15} />
+
             </button>
 
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="space-y-1">
 
-            <table className="w-full min-w-[650px]">
+            {recentPurchases.map(
+              (purchase, index) => (
 
-              <thead>
-                <tr className="border-b border-[#DCE7E7] text-left text-xs text-[#64748B]">
-                  <th className="pb-3 font-medium">
-                    Product
-                  </th>
+                <div
+                  key={index}
+                  className="flex items-center justify-between rounded-xl p-3 transition hover:bg-[#F8FCFC]"
+                >
 
-                  <th className="pb-3 font-medium">
-                    Category
-                  </th>
+                  <div className="flex items-center gap-3">
 
-                  <th className="pb-3 font-medium">
-                    Store
-                  </th>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#CCFBF1] text-[#0F766E]">
 
-                  <th className="pb-3 font-medium">
-                    Date
-                  </th>
+                      <ShoppingBag size={18} />
 
-                  <th className="pb-3 text-right font-medium">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
+                    </div>
 
-              <tbody>
+                    <div>
 
-                {recentPurchases.map((purchase) => (
-                  <tr
-                    key={purchase.id}
-                    className="border-b border-[#EDF4F4] last:border-0"
-                  >
+                      <p className="text-sm font-medium text-[#102A43]">
+                        {purchase.product}
+                      </p>
 
-                    <td className="py-4 text-sm font-medium text-[#102A43]">
-                      {purchase.product}
-                    </td>
+                      <p className="mt-1 text-xs text-[#64748B]">
+                        {purchase.store}
+                      </p>
 
-                    <td className="py-4">
-                      <Badge variant="info">
-                        {purchase.category}
-                      </Badge>
-                    </td>
+                    </div>
 
-                    <td className="py-4 text-sm text-[#64748B]">
-                      {purchase.store}
-                    </td>
+                  </div>
 
-                    <td className="py-4 text-sm text-[#64748B]">
+                  <div className="text-right">
+
+                    <p className="text-sm font-semibold text-[#102A43]">
+                      ₹
+                      {purchase.amount.toLocaleString(
+                        "en-IN"
+                      )}
+                    </p>
+
+                    <p className="mt-1 flex items-center justify-end gap-1 text-xs text-[#94A3B8]">
+
+                      <CalendarDays size={12} />
+
                       {purchase.date}
-                    </td>
 
-                    <td className="py-4 text-right text-sm font-semibold text-[#102A43]">
-                      {purchase.amount}
-                    </td>
+                    </p>
 
-                  </tr>
-                ))}
+                  </div>
 
-              </tbody>
+                </div>
 
-            </table>
+              )
+            )}
 
           </div>
 
         </Card>
 
-        {/* Most Purchased */}
+        {/* Quick Summary */}
+
         <Card>
 
-          <div className="mb-5">
+          <div className="mb-6">
 
             <h2 className="text-lg font-semibold text-[#102A43]">
-              Most Purchased
+              Quick Summary
             </h2>
 
-            <p className="mt-1 text-xs text-[#64748B]">
-              Based on your purchase history
+            <p className="mt-1 text-sm text-[#64748B]">
+              A quick look at your activity.
             </p>
 
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
 
-            {topProducts.map((product, index) => {
+            <div className="rounded-xl bg-[#F0FAFA] p-4">
 
-              const percentage =
-                (product.purchases / topProducts[0].purchases) * 100;
+              <div className="flex items-center gap-3">
 
-              return (
-                <div key={product.name}>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#CCFBF1] text-[#0F766E]">
 
-                  <div className="mb-2 flex items-center justify-between">
-
-                    <span className="text-sm font-medium text-[#102A43]">
-                      {index + 1}. {product.name}
-                    </span>
-
-                    <span className="text-xs text-[#64748B]">
-                      {product.purchases} purchases
-                    </span>
-
-                  </div>
-
-                  <div className="h-2 rounded-full bg-[#E6F0F0]">
-
-                    <div
-                      className="h-2 rounded-full bg-[#0F766E]"
-                      style={{
-                        width: `${percentage}%`,
-                      }}
-                    />
-
-                  </div>
+                  <ReceiptText size={17} />
 
                 </div>
-              );
-            })}
+
+                <div>
+
+                  <p className="text-xs text-[#64748B]">
+                    Highest monthly spending
+                  </p>
+
+                  <p className="mt-1 text-sm font-semibold text-[#102A43]">
+                    {highestMonth.month}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <p className="mt-3 text-lg font-bold text-[#0F766E]">
+                ₹
+                {highestMonth.amount.toLocaleString(
+                  "en-IN"
+                )}
+              </p>
+
+            </div>
+
+            <div className="rounded-xl bg-[#FFF9E8] p-4">
+
+              <div className="flex items-center gap-3">
+
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFF4D6] text-[#B77900]">
+
+                  <Package size={17} />
+
+                </div>
+
+                <div>
+
+                  <p className="text-xs text-[#64748B]">
+                    Top category
+                  </p>
+
+                  <p className="mt-1 text-sm font-semibold text-[#102A43]">
+                    Dairy
+                  </p>
+
+                </div>
+
+              </div>
+
+              <p className="mt-3 text-lg font-bold text-[#B77900]">
+                ₹1,555
+              </p>
+
+            </div>
+
+            <div className="rounded-xl bg-[#EEF2FF] p-4">
+
+              <div className="flex items-center gap-3">
+
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#E0E7FF] text-[#6366F1]">
+
+                  <TrendingUp size={17} />
+
+                </div>
+
+                <div>
+
+                  <p className="text-xs text-[#64748B]">
+                    Average purchase
+                  </p>
+
+                  <p className="mt-1 text-sm font-semibold text-[#102A43]">
+                    ₹
+                    {dashboardData.averageSpend.toLocaleString(
+                      "en-IN"
+                    )}
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
 
           </div>
 

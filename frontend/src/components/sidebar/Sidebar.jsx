@@ -8,6 +8,7 @@ import {
   Bell,
   Settings,
   LogOut,
+  Users,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -24,6 +25,11 @@ function Sidebar() {
       path: "/upload-bills",
       icon: Upload,
     },
+    {
+  label: "Circles",
+  path: "/circles",
+  icon: Users,
+},
     {
       label: "Inventory",
       path: "/inventory",
